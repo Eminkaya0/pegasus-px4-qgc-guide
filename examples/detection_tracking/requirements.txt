@@ -1,0 +1,7 @@
+# Detection & Tracking dependencies
+# Install with Isaac Sim's Python:
+#   ~/.local/share/ov/pkg/isaac-sim-*/python.sh -m pip install -r requirements.txt
+
+ultralytics>=8.0.0          # YOLOv8
+opencv-python-headless>=4.8.0  # Frame processing (headless avoids GUI conflicts with Isaac Sim)
+pymavlink>=2.4.0            # MAVLink communication for tracking controller

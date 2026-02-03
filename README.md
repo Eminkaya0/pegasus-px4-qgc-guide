@@ -235,6 +235,85 @@ QGroundControl ◄────────────────────�
 └── UDP: localhost:18570 (connect here!)
 ```
 
+---
+
+## Advanced: Fixed-Wing Detection & Tracking Scenario
+
+An advanced scenario where a camera-equipped quadrotor detects and actively tracks a fixed-wing aircraft using YOLOv8.
+
+### Scenario Architecture
+
+```
+Fixed-Wing Target (scripted racetrack path at 30m altitude)
+    ↓ appears in camera FOV (50-100m range)
+Observer Drone (Iris + MonocularCamera at 15 FPS)
+    ↓ camera frames (640x480)
+YoloDetectionBackend (YOLOv8 nano inference)
+    ↓ bounding box + confidence
+TrackingController (visual servoing via MAVLink offboard)
+    ↓ velocity commands
+PX4 SITL → QGroundControl (monitoring on UDP 18570)
+```
+
+### Components
+
+| File | Purpose |
+|------|---------|
+| `detection_tracking_scenario.py` | Main entry point - wires everything together |
+| `yolo_detection_backend.py` | Custom Pegasus Backend: captures camera frames, runs YOLOv8 |
+| `fixed_wing_target.py` | Scripted fixed-wing that flies a looping waypoint path |
+| `tracking_controller.py` | Visual servoing controller via MAVLink offboard mode |
+
+### Setup
+
+```bash
+# 1. Install Python dependencies in Isaac Sim's environment
+~/.local/share/ov/pkg/isaac-sim-*/python.sh -m pip install -r examples/detection_tracking/requirements.txt
+
+# 2. Provide a fixed-wing USD model
+#    Place your model at: examples/detection_tracking/assets/fixed_wing.usd
+#    Options:
+#    - Create in Isaac Sim: Create > Mesh > Cube, scale to plane shape, export as USD
+#    - Import a free 3D model (.obj/.fbx) via Isaac Sim's File > Import
+#    - Download from Sketchfab/TurboSquid (free models available)
+
+# 3. Kill stale PX4 processes
+pkill -9 px4 2>/dev/null; rm -f /tmp/px4_lock-* /tmp/px4-sock-*
+
+# 4. Run the scenario
+cd /path/to/pegasus-px4-qgc-guide
+~/.local/share/ov/pkg/isaac-sim-*/python.sh examples/detection_tracking/detection_tracking_scenario.py
+```
+
+### How It Works
+
+1. **Observer drone** spawns with a forward-facing camera (640x480, 15 FPS, 200m clipping range)
+2. **Fixed-wing target** flies a racetrack pattern at ~30m altitude, 15 m/s
+3. **YOLOv8** runs on each camera frame, looking for COCO class "aeroplane" (class 4)
+4. A live **detection window** shows annotated frames with bounding boxes and "TRACKING"/"SEARCHING" status
+5. After 10s warmup, the **tracking controller** connects to PX4 via MAVLink offboard:
+   - Arms and takes off to 30m
+   - When target detected: adjusts yaw/altitude/speed to keep it centered in frame
+   - When target lost: enters search mode (slow yaw rotation)
+6. Monitor everything in **QGroundControl** on UDP 18570
+
+### Detection Notes
+
+- YOLOv8 nano (COCO-trained) has an "aeroplane" class but may not reliably detect 3D-rendered aircraft at distance
+- For better results, consider fine-tuning YOLOv8 on synthetic data rendered from Isaac Sim
+- The `target_classes` config can be extended to include other COCO classes (e.g., bird=14) if using different target models
+- Detection window shows a red crosshair at frame center and green bounding boxes around detections
+
+### Tracking Controller Parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `kp_yaw` | 0.3 | Proportional gain for yaw tracking (deg/s per pixel) |
+| `kp_vz` | 0.005 | Proportional gain for vertical tracking (m/s per pixel) |
+| `forward_speed` | 5.0 | Forward speed when tracking (m/s) |
+| `search_yaw_rate` | 15.0 | Yaw rate during search mode (deg/s) |
+| `search_timeout` | 3.0 | Seconds without detection before entering search mode |
+
 ## License
 
 This guide is provided as-is for educational purposes. The example scripts are based on [Pegasus Simulator](https://github.com/PegasusResearch/PegasusSimulator) (BSD-3-Clause).
