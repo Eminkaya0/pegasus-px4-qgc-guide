@@ -1,0 +1,61 @@
+#usda 1.0
+(
+    defaultPrim = "FixedWing"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "FixedWing" (
+    kind = "component"
+)
+{
+    # Fuselage - main body (elongated box)
+    def Cube "Fuselage"
+    {
+        float3 xformOp:scale = (3.0, 0.4, 0.4)
+        double3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+
+        color3f[] primvars:displayColor = [(0.8, 0.2, 0.2)]
+    }
+
+    # Left Wing
+    def Cube "LeftWing"
+    {
+        float3 xformOp:scale = (1.0, 2.5, 0.1)
+        double3 xformOp:translate = (0, -1.45, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+
+        color3f[] primvars:displayColor = [(0.9, 0.3, 0.3)]
+    }
+
+    # Right Wing
+    def Cube "RightWing"
+    {
+        float3 xformOp:scale = (1.0, 2.5, 0.1)
+        double3 xformOp:translate = (0, 1.45, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+
+        color3f[] primvars:displayColor = [(0.9, 0.3, 0.3)]
+    }
+
+    # Tail Vertical Stabilizer
+    def Cube "TailVertical"
+    {
+        float3 xformOp:scale = (0.3, 0.1, 0.6)
+        double3 xformOp:translate = (-1.3, 0, 0.4)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+
+        color3f[] primvars:displayColor = [(0.7, 0.2, 0.2)]
+    }
+
+    # Tail Horizontal Stabilizer
+    def Cube "TailHorizontal"
+    {
+        float3 xformOp:scale = (0.3, 1.0, 0.08)
+        double3 xformOp:translate = (-1.3, 0, 0.1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+
+        color3f[] primvars:displayColor = [(0.7, 0.2, 0.2)]
+    }
+}

@@ -21,11 +21,11 @@ class TrackingController:
     velocity commands to PX4 SITL via MAVLink offboard mode.
     """
 
-    def __init__(self, yolo_backend, mavlink_port=14540, takeoff_altitude=30.0):
+    def __init__(self, yolo_backend, mavlink_port=18570, takeoff_altitude=30.0):
         """
         Args:
             yolo_backend: YoloDetectionBackend instance to read detections from
-            mavlink_port: PX4 offboard MAVLink port (14540 + vehicle_id)
+            mavlink_port: PX4 MAVLink UDP port (18570 + vehicle_id)
             takeoff_altitude: Target altitude in meters (NED: negative = up)
         """
         self._yolo_backend = yolo_backend
@@ -51,7 +51,7 @@ class TrackingController:
 
     def start(self):
         """Connect to PX4 and start the heartbeat thread."""
-        connection_string = f"udpin:localhost:{self._mavlink_port}"
+        connection_string = f"udp:localhost:{self._mavlink_port}"
         print(f"[TrackingController] Connecting to PX4 at {connection_string}")
 
         self._connection = mavutil.mavlink_connection(connection_string)

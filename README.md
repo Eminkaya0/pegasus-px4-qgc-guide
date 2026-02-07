@@ -2,6 +2,16 @@
 
 A complete guide for connecting **NVIDIA Isaac Sim** (with Pegasus Simulator) to **PX4 SITL** and monitoring your drone in **QGroundControl**.
 
+## 🎬 Demo Video
+
+[![YOLO Detection Demo](https://img.shields.io/badge/Demo-Video-red)](videos/yolo_detection_demo.mp4)
+
+**Features demonstrated:**
+- Real-time UAV detection using YOLOv8
+- Camera mounted on drone body in Isaac Sim
+- Fixed-wing target tracking scenario
+- PX4 SITL + QGroundControl integration
+
 This guide documents the correct configuration that took significant debugging to figure out, since the official documentation doesn't clearly explain the connection architecture between these three systems.
 
 ## Architecture Overview

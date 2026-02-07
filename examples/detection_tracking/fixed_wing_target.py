@@ -56,9 +56,9 @@ class FixedWingTarget:
         """Current position of the fixed-wing target."""
         return self._position.copy()
 
-    def _update(self, event):
+    def _update(self, dt):
         """Physics callback: move the target along the waypoint path."""
-        dt = event.payload["dt"]
+        # dt is passed directly as a float, not as event.payload
 
         # Get current target waypoint
         target_wp = np.array(self._waypoints[self._current_waypoint_idx], dtype=np.float64)
@@ -112,8 +112,8 @@ class FixedWingTarget:
             float(self._position[2])
         ))
 
-        # USD uses (w, x, y, z) quaternion order
-        orient_op.Set(Gf.Quatd(
+        # USD uses (w, x, y, z) quaternion order - use Quatf for single precision
+        orient_op.Set(Gf.Quatf(
             float(quat[3]),
             float(quat[0]),
             float(quat[1]),

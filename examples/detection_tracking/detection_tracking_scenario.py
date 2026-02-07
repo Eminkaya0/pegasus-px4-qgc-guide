@@ -56,7 +56,7 @@ from tracking_controller import TrackingController
 # Path to your fixed-wing USD model
 # You can create a simple one in Isaac Sim: Create > Mesh > Cube, scale it to look like a plane,
 # then File > Export to save as USD. Or import a free 3D model.
-FIXED_WING_USD = os.path.join(os.path.dirname(__file__), "assets", "fixed_wing.usd")
+FIXED_WING_USD = os.path.join(os.path.dirname(__file__), "assets", "fixed_wing.usda")
 
 # PX4 Autopilot directory
 PX4_DIR = PegasusInterface().px4_path  # Uses path from Pegasus configs.yaml
@@ -162,7 +162,7 @@ class DetectionTrackingApp:
         # --- 6. Setup tracking controller ---
         self.tracker = TrackingController(
             self.yolo_backend,
-            mavlink_port=14540,             # PX4 offboard port (14540 + vehicle_id)
+            mavlink_port=18570,             # PX4 MAVLink UDP port (18570 + vehicle_id)
             takeoff_altitude=30.0,          # Same altitude as fixed-wing
         )
 
