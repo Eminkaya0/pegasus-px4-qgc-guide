@@ -6,9 +6,9 @@ A complete guide for connecting **NVIDIA Isaac Sim** (with Pegasus Simulator) to
 
 ### Real-time UAV Detection with YOLOv8 in NVIDIA Isaac Sim
 
-[![YOLOv8 UAV Detection Demo](images/yolo_detection_thumbnail.jpg)](videos/yolo_detection_demo.mp4)
+[![YOLOv8 UAV Detection Demo](https://img.youtube.com/vi/AUYeP_fm134/maxresdefault.jpg)](https://youtu.be/AUYeP_fm134)
 
-> **Click the image to watch the demo video**
+> **Click the image to watch the full demo on YouTube**
 
 Demonstration of real-time UAV detection and tracking using YOLOv8 custom-trained model in NVIDIA Isaac Sim with Pegasus Simulator. Features camera-equipped quadrotor detecting fixed-wing aircraft, with PX4 SITL integration and QGroundControl monitoring.
 
